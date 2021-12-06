@@ -63,13 +63,6 @@ define(
                 component: 'PayPro_PaymentGateway/js/view/payment/method-renderer/paypro_gateway'
             }
         );
-
-        rendererList.push(
-            {
-                type: 'paypro_visa',
-                component: 'PayPro_PaymentGateway/js/view/payment/method-renderer/paypro_gateway'
-            }
-        );
       
         /** Add view logic here if needed */
         return Component.extend({});
