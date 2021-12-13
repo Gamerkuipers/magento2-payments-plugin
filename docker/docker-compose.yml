@@ -1,0 +1,53 @@
+version: '2'
+
+services:
+  mariadb:
+    image: docker.io/bitnami/mariadb:10.3
+    environment:
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+      - MARIADB_USER=paypro_magento_user
+      - MARIADB_DATABASE=paypro_magento_db
+      - MARIADB_PASSWORD=paypro
+    volumes:
+      - 'mariadb_data:/bitnami/mariadb'
+  magento:
+    image: docker.io/bitnami/magento:2
+    ports:
+      - '80:8080'
+      - '443:8443'
+    environment:
+      - MAGENTO_HOST=localhost
+      - MAGENTO_DATABASE_HOST=mariadb
+      - MAGENTO_DATABASE_PORT_NUMBER=3306
+      - MAGENTO_DATABASE_NAME=paypro_magento_db
+      - MAGENTO_DATABASE_USER=paypro_magento_user
+      - MAGENTO_DATABASE_PASSWORD=paypro
+      - MAGENTO_USERNAME=paypro
+      - MAGENTO_PASSWORD=adminpaypro1
+      - MAGENTO_EMAIL=admin@paypro.nl
+      - MAGENTO_FIRST_NAME=pay
+      - MAGENTO_LAST_NAME=pro
+      # options default, production, developer
+      - MAGENTO_MODE=developer
+      - ELASTICSEARCH_HOST=elasticsearch
+      - ELASTICSEARCH_PORT_NUMBER=9200
+      # ALLOW_EMPTY_PASSWORD is recommended only for development.
+      - ALLOW_EMPTY_PASSWORD=yes
+    volumes:
+      - 'magento_data:/bitnami/magento'
+    depends_on:
+      - mariadb
+      - elasticsearch
+  elasticsearch:
+    image: docker.io/bitnami/elasticsearch:7
+    volumes:
+      - 'elasticsearch_data:/bitnami/elasticsearch/data'
+
+volumes:
+  mariadb_data:
+    driver: local
+  magento_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
